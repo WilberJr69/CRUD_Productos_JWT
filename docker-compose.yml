@@ -1,0 +1,33 @@
+services:
+  mysql-service:
+    image: mysql:8.1
+    environment:
+      MYSQL_USER: root
+      MYSQL_PASSWORD: password
+      MYSQL_DATABASE: mi_base_de_datos
+    ports:
+      - "3306:3306"
+    volumes:
+      - E:/docker_data/volumes/mysql/data:/var/lib/mysql
+    networks:
+      - spring-boot-netWil
+
+  spring-boot-app:
+    image: spring/app_gestion
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-service:3306/mi_base_de_datos
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: password
+    ports:
+      - "8080:8080"
+    networks:
+      - spring-boot-netWil
+    depends_on:
+      - mysql-service
+
+volumes:
+  mysql:
+
+networks:
+  spring-boot-netWil:
+    driver: bridge
